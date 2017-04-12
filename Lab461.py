@@ -5,7 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model
 from scipy import stats
-
+from pprint import pprint
+import pandas as pd
 
 f = open("Smarket.csv")
 f.readline()  # skip the header
@@ -19,5 +20,7 @@ for i in range(0,8):
 
 # Look for correlation between predictors
 cor = np.corrcoef(preparedData)
-print "Year             Lag1          Lag2          Lag3          Lag4       Lag5       Volume      Today"
-print cor
+labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 'Today']
+df = pd.DataFrame(cor, columns=labels, index=labels)
+print df
+#We can see that Year and Volume has a pretty high correlation. So every year more stocks are traded.

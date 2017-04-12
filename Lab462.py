@@ -5,14 +5,20 @@
 #import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import datasets, linear_model, metrics
-#import pylab as pl
-#from scipy import stats
 import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 
 data = pd.read_csv('Smarket.csv', usecols=range(1,10), index_col=0, parse_dates=True)
-data.head()
+print data.head()
+
+# Can be used to get summary including p-value
+#formula = 'Direction ~ Lag1+Lag2+Lag3+Lag4+Lag5+Volume'
+#model = smf.glm(formula=formula, data=data, family=sm.families.Binomial())
+#result = model.fit()
+#print(result.summary())
+
+
 #X_train = data[:'2004'][['Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume']]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
 Y_train = data[:'2004']['Direction']
@@ -22,6 +28,7 @@ X_test = data['2005':][['Lag1', 'Lag2']]
 Y_test = data['2005':]['Direction']
 
 lr = linear_model.LogisticRegression()
+lr.fit(X_train,Y_train)
 lr.fit(X_train,Y_train)
 
 print "Score of train and test data"

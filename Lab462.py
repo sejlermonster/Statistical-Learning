@@ -18,7 +18,6 @@ print data.head()
 #result = model.fit()
 #print(result.summary())
 
-
 #X_train = data[:'2004'][['Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume']]
 X_train = data[:'2004'][['Lag1', 'Lag2']]
 Y_train = data[:'2004']['Direction']
@@ -28,7 +27,6 @@ X_test = data['2005':][['Lag1', 'Lag2']]
 Y_test = data['2005':]['Direction']
 
 lr = linear_model.LogisticRegression()
-lr.fit(X_train,Y_train)
 lr.fit(X_train,Y_train)
 
 print "Score of train and test data"

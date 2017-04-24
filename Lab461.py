@@ -17,10 +17,14 @@ preparedData = []
 for i in range(0,8):
     preparedData.append([item[i] for item in data])
 
-
 # Look for correlation between predictors
 cor = np.corrcoef(preparedData)
 labels = ['Year', 'Lag1', 'Lag2', 'Lag3', 'Lag4', 'Lag5', 'Volume', 'Today']
 df = pd.DataFrame(cor, columns=labels, index=labels)
 print df
 #We can see that Year and Volume has a pretty high correlation. So every year more stocks are traded.
+
+plt.plot(preparedData[6], 'ro')
+plt.ylabel('Volume')
+plt.xlabel('Index')
+plt.show()

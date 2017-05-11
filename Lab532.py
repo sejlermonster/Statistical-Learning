@@ -1,6 +1,7 @@
 import numpy as np
 from sklearn import metrics, linear_model
 from sklearn.model_selection import KFold, cross_val_score
+from sklearn.preprocessing import PolynomialFeatures
 import pandas as pd
 
 data = pd.read_csv('Auto.csv', usecols=range(0,8), parse_dates=True)
@@ -22,6 +23,12 @@ print "\n"
 print "Coefficients:"
 print lm.coef_
 
-#k_fold = KFold(n_splits=X_train.shape[0]) 
-test = cross_val_score(lm, X_train, Y_train, cv=192,  scoring = 'neg_mean_squared_error', n_jobs=-1)
-print np.mean(-test)
+#Running cross_val_score for polynomial with different degrees
+for i in range(1, 6):
+    poly = PolynomialFeatures(degree=i)
+    X_train_poly = poly.fit_transform(X_train)
+    lm = linear_model.LinearRegression()
+    #Setting splits to amount of data points, leave-one-out cross-validation
+    k_fold = KFold(n_splits=X_train.shape[0]) 
+    test = cross_val_score(lm, X_train_poly, Y_train, cv=k_fold, scoring = 'neg_mean_squared_error')
+    print np.mean(-test)

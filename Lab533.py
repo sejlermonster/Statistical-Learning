@@ -16,7 +16,7 @@ for i in range(1, 11):
     poly = PolynomialFeatures(degree=i)
     X_train_poly = poly.fit_transform(X_train)
     lm = linear_model.LinearRegression()
-    #Using 5 folds
+    #Using 10 folds
     k_fold = KFold(n_splits=10) 
     test = cross_val_score(lm, X_train_poly, Y_train, cv=k_fold, scoring = 'neg_mean_squared_error')
     print np.mean(-test)

@@ -1,4 +1,3 @@
-import math
 import pylab
 import numpy as np
 import pandas as pd
@@ -7,33 +6,15 @@ import sklearn.linear_model as lm
 from itertools import combinations
 import matplotlib.pyplot as plt
 from sklearn import metrics, linear_model
+import imp
 
+metricsUtil = imp.load_source('MetricsUtil', 'MetricsUtil.py')
 # drop rows with nan values
 data = pd.read_csv('Hitters.csv', usecols=range(0,21), parse_dates=True).dropna()
 print list(data.columns.values)
 
-X = pd.get_dummies(data.drop('Salary', axis=1).drop('Name', axis=1))
+X = pd.get_dummies(data.drop('Salary', axis=1).drop('Name', axis=1)).drop(["League_A", "Division_E", "NewLeague_A"], axis=1)
 Y = data['Salary']
-
-#Residual sum of squares
-def RSS(Y, Y_hat):
-    residual = Y - Y_hat
-    return (residual ** 2).sum()
-
-#Residual sum of squares
-def A_rsquare(RSS, Y, Y_hat, n, d):
-    #Total sum of squares, formula: sum((y-y_mean)^2)
-    TSS = ((Y - Y.mean()) ** 2).sum()
-    #Formula from slides:  adjusted R^2 = 1-(RSS/(n-d-1)/(TSS/(n-1)))
-    return 1.0 - ((RSS / (n - d - 1)) / (TSS / (n - 1)))
-
-def Cp(RSS, d, Y_hat, n, Y):
-    # Formula from slides: Cp = 1/n * (RSS + 2* d * sigma^2)
-    return  (1.0 / n) * (RSS + 2 * d * Y_hat.var())
-              
-def Bic(n, RSS, d, Y_hat):
-      # Formula from slides: bic = 1/n * (RSS+log(n)*d*sigma^2)
-      return (1.0 / n) * (RSS + math.log(n) * d * Y_hat.var())
 
 def process_subset(feature_set):
     d = len(feature_set)
@@ -42,13 +23,13 @@ def process_subset(feature_set):
     model = lm.LinearRegression().fit(X[[i for i in feature_set]], Y)
     Y_hat = model.predict(X[list(feature_set)])
     
-    rss = RSS(Y, Y_hat)  
+    rss = metricsUtil.RSS(Y, Y_hat)  
     rsquared = metrics.r2_score(Y, Y_hat)
-    #rsquared = A_rsquare(rss, Y, Y_hat, n, d)
+    #rsquared = mathUtil..A_rsquare(rss, Y, Y_hat, n, d)
 
-    cp = Cp(rss, d, Y_hat, n, Y)
-    bic = Bic(n, rss, d, Y_hat)
-    
+    cp = metricsUtil.Cp(rss, d, Y_hat, n, Y)
+    bic = metricsUtil.Bic(n, rss, d, Y_hat)
+   
     return {"model":model, 
             "RSS":rss,
             "features": feature_set,
@@ -89,7 +70,7 @@ def forward_stepwise_selection(predictors):
 subsets = pd.DataFrame(columns=["RSS", "model", "features", "rsquared", "bic", "cp"])
 
 #Best subset selection
-for i in xrange(3,9):
+for i in xrange(1,3):
     subsets.loc[i] = best_subset_selection(i)
 
 # #Forward stepwise selection

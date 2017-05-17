@@ -56,28 +56,33 @@ def process_subset(feature_set):
             "bic": bic,
             "cp":cp }
 
-def get_best(k):
+def best_subset_selection(k):
     results = []
     for combo in combinations(X.columns, k):
         results.append(process_subset(combo))
     models = pd.DataFrame(results)
+    #Choose best model based on RSS
     best_model = models.loc[models['RSS'].argmin()]
     return best_model
 
-def backward(predictors):
+def backward_stepwise_selection(predictors):
     results = []
+    # All combinations of predictors of the size of predictors -1, 
     for combo in combinations(predictors, len(predictors)-1):
         results.append(process_subset(combo))
     models = pd.DataFrame(results)
+    #Choose best model based on RSS
     best_model = models.loc[models['RSS'].argmin()]
     return best_model
 
-def forward(predictors):
+def forward_stepwise_selection(predictors):
+    #Identify predictors not already picked
     remaining_predictors = [p for p in X.columns if p not in predictors]
     results = []
     for p in remaining_predictors:
         results.append(process_subset(predictors+[p]))
     models = pd.DataFrame(results)
+    #Choose best model based on RSS
     best_model = models.loc[models['RSS'].argmin()]
     return best_model
 
@@ -85,18 +90,18 @@ subsets = pd.DataFrame(columns=["RSS", "model", "features", "rsquared", "bic", "
 
 #Best subset selection
 for i in xrange(3,9):
-    subsets.loc[i] = get_best(i)
+    subsets.loc[i] = best_subset_selection(i)
 
 # #Forward stepwise selection
 # predictors = []
 # for i in xrange(1, len(X.columns)+1):
-#     subsets.loc[i] = forward(predictors)
+#     subsets.loc[i] = forward_stepwise_selection(predictors)
 #     predictors = subsets.loc[i].features
     
-#Backward stepwise selection
+# #Backward stepwise selection
 # predictors = X.columns
 # while(len(predictors) > 1):
-#     subsets.loc[len(predictors)-1] = backward(predictors)
+#     subsets.loc[len(predictors)-1] = backward_stepwise_selection(predictors)
 #     predictors = subsets.loc[len(predictors)-1].features
 
 rsquared = subsets.rsquared

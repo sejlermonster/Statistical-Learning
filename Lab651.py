@@ -27,7 +27,6 @@ def RSS(Y, Y_hat):
 # def Cp(RSS, len_of_featureset, Y_hat, X, Y):
 #     return ( RSS + 2 * len_of_featureset * Y_hat.var() ) / X.shape[1]
           
-
 # def Bic(X, RSS, len_of_featureset):
 #     n = X.shape[1]
 #     return n * math.log(RSS / n) + len_of_featureset * math.log(n)
@@ -39,11 +38,13 @@ def process_subset(feature_set):
     Y_hat = regr.predict(X[list(feature_set)])
     
     rss = RSS(Y, Y_hat)   
+    rsquared = regr.rsquared
+    
     # cp = Cp(rss, d, Y_hat, X, Y)
     # bic = Bic(X, rss, d)
     model = sm.OLS(Y,X[list(feature_set)])
     regr = model.fit()
-    cp = regr.aic
+    cp = regr.aic # same as cp when doing linear regression
     bic = regr.bic
     
     rsquared = metrics.r2_score(Y, Y_hat)

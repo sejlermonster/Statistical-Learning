@@ -8,8 +8,6 @@ from itertools import combinations
 import matplotlib.pyplot as plt
 from sklearn import metrics, linear_model
 
-
-
 # drop rows with nan values
 data = pd.read_csv('Hitters.csv', usecols=range(0,21), parse_dates=True).dropna()
 print list(data.columns.values)
@@ -41,8 +39,8 @@ def process_subset(feature_set):
     d = len(feature_set)
     n = X.shape[1]
     # Fit model on feature_set  
-    regr = lm.LinearRegression().fit(X[[i for i in feature_set]], Y)
-    Y_hat = regr.predict(X[list(feature_set)])
+    model = lm.LinearRegression().fit(X[[i for i in feature_set]], Y)
+    Y_hat = model.predict(X[list(feature_set)])
     
     rss = RSS(Y, Y_hat)  
     rsquared = metrics.r2_score(Y, Y_hat)
@@ -51,7 +49,7 @@ def process_subset(feature_set):
     cp = Cp(rss, d, Y_hat, n, Y)
     bic = Bic(n, rss, d, Y_hat)
     
-    return {"model":regr, 
+    return {"model":model, 
             "RSS":rss,
             "features": feature_set,
             "rsquared": rsquared,
@@ -86,8 +84,8 @@ def forward(predictors):
 subsets = pd.DataFrame(columns=["RSS", "model", "features", "rsquared", "bic", "cp"])
 
 #Best subset selection
-# for i in xrange(1,3):
-#     subsets.loc[i] = get_best(i)
+for i in xrange(3,9):
+    subsets.loc[i] = get_best(i)
 
 # #Forward stepwise selection
 # predictors = []
@@ -96,10 +94,10 @@ subsets = pd.DataFrame(columns=["RSS", "model", "features", "rsquared", "bic", "
 #     predictors = subsets.loc[i].features
     
 #Backward stepwise selection
-predictors = X.columns
-while(len(predictors) > 1):
-    subsets.loc[len(predictors)-1] = backward(predictors)
-    predictors = subsets.loc[len(predictors)-1].features
+# predictors = X.columns
+# while(len(predictors) > 1):
+#     subsets.loc[len(predictors)-1] = backward(predictors)
+#     predictors = subsets.loc[len(predictors)-1].features
 
 rsquared = subsets.rsquared
 RSS = subsets.RSS

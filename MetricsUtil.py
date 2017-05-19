@@ -2,8 +2,9 @@ import math
 import numpy as np
 
 #Mean squared error
-def Mse(Y, Y_hat):
-    return ((Y_test - Y_hat) ** 2).mean()
+def Mse(n, Y, Y_hat):
+    #return (1.0 / n) * ((Y_hat- Y) ** 2).sum()
+    return ((Y_hat- Y) ** 2).mean()
 
 #Residual sum of squares
 def RSS(Y, Y_hat):
@@ -24,3 +25,4 @@ def Cp(RSS, d, Y_hat, n, Y):
 def Bic(n, RSS, d, Y_hat):
       # Formula from slides: bic = 1/n * (RSS+log(n)*d*sigma^2)
       return (1.0 / n) * (RSS + math.log(n) * d * Y_hat.var())
+      

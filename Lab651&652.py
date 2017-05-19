@@ -1,7 +1,5 @@
-import pylab
 import numpy as np
 import pandas as pd
-import statsmodels.api as sm
 import sklearn.linear_model as lm
 from itertools import combinations
 import matplotlib.pyplot as plt
@@ -18,13 +16,16 @@ Y = data['Salary']
 
 def process_subset(feature_set):
     d = len(feature_set)
-    n = X.shape[1]
+    n = X.shape[0]
     # Fit model on feature_set  
     model = lm.LinearRegression().fit(X[[i for i in feature_set]], Y)
     Y_hat = model.predict(X[list(feature_set)])
     
     rss = metricsUtil.RSS(Y, Y_hat)  
     rsquared = metrics.r2_score(Y, Y_hat)
+
+    # model = sm.OLS(Y,X[list(feature_set)])
+    # regr = model.fit()
     #rsquared = mathUtil..A_rsquare(rss, Y, Y_hat, n, d)
 
     cp = metricsUtil.Cp(rss, d, Y_hat, n, Y)
@@ -70,8 +71,9 @@ def forward_stepwise_selection(predictors):
 subsets = pd.DataFrame(columns=["RSS", "model", "features", "rsquared", "bic", "cp"])
 
 #Best subset selection
-for i in xrange(1,3):
+for i in xrange(1,9):
     subsets.loc[i] = best_subset_selection(i)
+    print i
 
 # #Forward stepwise selection
 # predictors = []

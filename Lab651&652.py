@@ -8,7 +8,7 @@ import imp
 
 metricsUtil = imp.load_source('MetricsUtil', 'MetricsUtil.py')
 # drop rows with nan values
-data = pd.read_csv('Hitters.csv', usecols=range(0,21), parse_dates=True).dropna()
+data = pd.read_csv('Hitters.csv', usecols=range(0,21)).dropna()
 print list(data.columns.values)
 
 X = pd.get_dummies(data.drop('Salary', axis=1).drop('Name', axis=1)).drop(["League_A", "Division_E", "NewLeague_A"], axis=1)
@@ -28,7 +28,7 @@ def process_subset(feature_set):
     # regr = model.fit()
     #rsquared = mathUtil..A_rsquare(rss, Y, Y_hat, n, d)
 
-    cp = metricsUtil.Cp(rss, d, Y_hat, n, Y)
+    cp = metricsUtil.Cp(rss, d, Y_hat, n)
     bic = metricsUtil.Bic(n, rss, d, Y_hat)
    
     return {"model":model, 
@@ -71,21 +71,21 @@ def forward_stepwise_selection(predictors):
 subsets = pd.DataFrame(columns=["RSS", "model", "features", "rsquared", "bic", "cp"])
 
 #Best subset selection
-for i in xrange(1,9):
-    subsets.loc[i] = best_subset_selection(i)
-    print i
+# for i in xrange(1,20):
+#     subsets.loc[i] = best_subset_selection(i)
+#     print i
 
-# #Forward stepwise selection
+#Forward stepwise selection
 # predictors = []
 # for i in xrange(1, len(X.columns)+1):
 #     subsets.loc[i] = forward_stepwise_selection(predictors)
 #     predictors = subsets.loc[i].features
-    
+
 # #Backward stepwise selection
-# predictors = X.columns
-# while(len(predictors) > 1):
-#     subsets.loc[len(predictors)-1] = backward_stepwise_selection(predictors)
-#     predictors = subsets.loc[len(predictors)-1].features
+predictors = X.columns
+while(len(predictors) > 1):
+    subsets.loc[len(predictors)-1] = backward_stepwise_selection(predictors)
+    predictors = subsets.loc[len(predictors)-1].features
 
 rsquared = subsets.rsquared
 RSS = subsets.RSS
@@ -103,24 +103,24 @@ print cp
 print "bic"
 print bic
 
-plt.subplot(2, 2, 1)
-plt.plot(RSS)
-plt.xlabel('# Predictors')
-plt.ylabel('RSS')
+# plt.subplot(2, 2, 1)
+# plt.plot(RSS)
+# plt.xlabel('# Predictors')
+# plt.ylabel('RSS')
 
-plt.subplot(2, 2, 2)
-plt.plot(rsquared)
-plt.xlabel('# Predictors')
-plt.ylabel('adjusted rsquared')
+# plt.subplot(2, 2, 2)
+# plt.plot(rsquared)
+# plt.xlabel('# Predictors')
+# plt.ylabel('rsquared')
 
-plt.subplot(2, 2, 3)
-plt.plot(cp)
-plt.xlabel('# Predictors')
-plt.ylabel('CP')
+# plt.subplot(2, 2, 3)
+# plt.plot(cp)
+# plt.xlabel('# Predictors')
+# plt.ylabel('CP')
 
-plt.subplot(2, 2, 4)
-plt.plot(bic)
-plt.xlabel('# Predictors')
-plt.ylabel('BIC')
+# plt.subplot(2, 2, 4)
+# plt.plot(bic)
+# plt.xlabel('# Predictors')
+# plt.ylabel('BIC')
 
-plt.show()
+# plt.show()

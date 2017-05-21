@@ -1,3 +1,4 @@
 *.pyc
 bla.py
 bla.ipynb
+.ipynb_checkpoints/bla-checkpoint.ipynb

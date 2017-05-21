@@ -14,7 +14,6 @@ import imp
 
 metricsUtil = imp.load_source('MetricsUtil', 'MetricsUtil.py')
 
-#Validation set approach 
 data = pd.read_csv('Hitters.csv', usecols=range(0,21), parse_dates=True).dropna()
 
 def process_subset(feature_set, x_train, y_train, x_test, y_test ):
@@ -27,7 +26,7 @@ def process_subset(feature_set, x_train, y_train, x_test, y_test ):
     rss = metricsUtil.RSS(y_test, Y_hat)  
 
     #mse = metrics.mean_squared_error(y_test, Y_hat)
-    mse = metricsUtil.Mse(n, y_test, Y_hat)
+    mse = metricsUtil.Mse(y_test, Y_hat)
     
     return {"model":model, 
             "RSS":rss,
@@ -54,7 +53,7 @@ subsets = pd.DataFrame(columns=["RSS", "model", "features", "mse"])
 # X_test = pd.get_dummies(test.drop('Salary', axis=1).drop('Name', axis=1)).drop(["League_A", "Division_E", "NewLeague_A"], axis=1)
 # Y_test = test['Salary']
 
-# for i in xrange(1, 4):
+# for i in xrange(1, 20):
 #     subsets.loc[i] = best_subset_selection(i, X_train, Y_train, X_test, Y_test)
     
 
@@ -72,7 +71,7 @@ for train_index, test_index in kf.split(X):
     Y_train = Y.iloc[train_index]
     X_test = X.iloc[test_index]
     Y_test = Y.iloc[test_index]
-    for i in xrange(1, 3):
+    for i in xrange(1, 20):
          subset = best_subset_selection(i, X_train, Y_train, X_test, Y_test)
          mse[j,i-1] = subset["mse"]
     j = j+1
@@ -87,3 +86,5 @@ print "features"
 print features
 print "mse"
 print mse
+print "rss"
+print RSS

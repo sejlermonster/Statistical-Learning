@@ -2,7 +2,7 @@ import math
 import numpy as np
 
 #Mean squared error
-def Mse(n, Y, Y_hat):
+def Mse(Y, Y_hat):
     #return (1.0 / n) * ((Y_hat- Y) ** 2).sum()
     return ((Y_hat- Y) ** 2).mean()
 
@@ -18,7 +18,7 @@ def A_rsquare(RSS, Y, Y_hat, n, d):
     #Formula from slides:  adjusted R^2 = 1-(RSS/(n-d-1)/(TSS/(n-1)))
     return 1.0 - ((RSS / (n - d - 1)) / (TSS / (n - 1)))
 
-def Cp(RSS, d, Y_hat, n, Y):
+def Cp(RSS, d, Y_hat, n):
     # Formula from slides: Cp = 1/n * (RSS + 2* d * sigma^2)
     return  (1.0 / n) * (RSS + 2 * d * Y_hat.var())
               

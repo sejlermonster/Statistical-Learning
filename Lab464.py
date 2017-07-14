@@ -13,11 +13,19 @@ Y_train = data[:'2004']['Direction']
 X_test = data['2005':][['Lag1', 'Lag2']]
 Y_test = data['2005':]['Direction']
 
-qda = QuadraticDiscriminantAnalysis()
+qda = QuadraticDiscriminantAnalysis(store_covariances=True)
 fit = qda.fit(X_train,Y_train)
 
 print "Prior probabilities:"
 print qda.priors_
+
+print "\n"
+print "Mean:"
+print qda.means_
+
+print "\n"
+print "Covariance:"
+print qda.covariances_
 
 print "\n"
 print "Confusion matrix"
